@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import crypt
 
 
@@ -6,7 +8,7 @@ def testPass(cryptPass):
     dictFile = open('dictionary.txt', 'r')
     for word in dictFile.readlines():
         word = word.strip('\n')
-        cryptWord = crypt.crypt(word.salt)
+        cryptWord = crypt.crypt(word, salt)
     if (cryptWord == cryptPass):
         print("[+] Found Password: ", word, "\n")
         return
@@ -16,7 +18,7 @@ def testPass(cryptPass):
 
 
 def main():
-    passFile = open('passwords.txt')
+    passFile = open('/etc/shadow')
     for line in passFile.readlines():
         if ":" in line:
             user = line.split(':')[0]
