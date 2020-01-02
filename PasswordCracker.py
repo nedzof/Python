@@ -8,10 +8,10 @@ def testPass(cryptPass):
         word = word.strip('\n')
         cryptWord = crypt.crypt(word.salt)
     if (cryptWord == cryptPass):
-        print("Found Password: ", word, "\n")
+        print("[+] Found Password: ", word, "\n")
         return
     else:
-        print("Password not found. \n")
+        print("[-] Password not found. \n")
         return
 
 
