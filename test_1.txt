@@ -1,0 +1,20 @@
+import crypt
+
+def testpass(hashy):
+	salt = hashy[0:2]
+	files = open('/etc/shadow/dictionary.txt')
+	for rijec in files.readLines():
+		word = word.strip('\n')
+		hashed = crypt.crypt(word,salt)
+	if(hashed = hashy):
+		print('[+] Password found' + word)
+	else:
+		print('[-] Password not found.\n')
+
+def main()
+	passFile = open('/etc/shadow')
+	for line in passFile.readLines():
+		user = line.split(':')[0]
+		hashy = line.split(':')[1].strip('')
+		print = ('[*] Cracking PW for' + user)
+		testPass(hashy)
