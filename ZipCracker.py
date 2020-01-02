@@ -3,6 +3,7 @@ import os
 import time
 from threading import Thread
 import optparse
+from pathlib import Path
 
 
 def main():
@@ -17,8 +18,10 @@ def main():
         zname = options.zname
         dname = options.dname
     start = time.time()
-    path = os.path.dirname(__file__) + ("/%s.zip" % zname)
-    zip = zi.ZipFile(path)
+
+    data_folder = Path(os.path.dirname(__file__))
+    zipFile_to_open = data_folder / "{%s}.zip" % zname
+    zip = zi.ZipFile(zipFile_to_open)
     dictionary = open('/home/caruk/PycharmProjects/Python/{}.txt'.format(dname))
     for guess in dictionary.readlines():
         chance = guess.strip('\n')
