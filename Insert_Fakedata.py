@@ -25,12 +25,12 @@ for i in range(1,dataCount +1):
         query = "USE ["+db+"] INSERT INTO ["+tbl+"] VALUES ('{}','{}','{}','{}','{}')".format(i,firstname+' '+lastname,address,phone,ssn)
         cursor.execute(query)
         cnxn.commit()
-        print('INSERTED: ', query.split('VALUES')[1])
+        print('[*]: ', query.split('VALUES')[1])
 
 
 cursor.close()
 cnxn.close()
-print('*********\n********* FINISHED: ',dataCount,' Rows inserted! *********\n*********')
+print('[+] FINISHED: ',dataCount,' Rows inserted! [+]')
 
 
 """
