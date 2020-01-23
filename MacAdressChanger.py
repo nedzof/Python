@@ -2,11 +2,17 @@
 
 import subprocess as sb
 import optparse as opt
-import re as rx
+import re
 import random
 
-def randomMAC():
-    return 1
+
+def random_mac():
+    mac = [0x00, 0x16, 0x3e,
+           random.randint(0x00, 0x7f),
+           random.randint(0x00, 0xff),
+           random.randint(0x00, 0xff)]
+    return ':'.join(map(lambda x: "%02x" % x, mac))
+
 
 def get_cmd_arguments():
     parser = opt.OptionParser()
@@ -15,8 +21,8 @@ def get_cmd_arguments():
     (option, arguments) = parser.parse_args()
     if not option.interface:
         parser.error("\n[-] Please specify an interface, use --help for more info.")
-    elif not option.new_mac:
-        parser.error("\n[-] Please specify a MAC address, use --help for more info.")
+    if not option.new_mac:
+        option.new_mac = random_mac()
     return option
 
 
@@ -24,12 +30,11 @@ def change_mac(interface, mac):
     print("[+] Changing MAC address for", interface, "to", mac)
     sb.call(["ifconfig", interface, "down"], shell=True)
     sb.call(["ifconfig " + interface + " hw ether " + mac], shell=True)
-    sb.call(["ifconfig", interface, "up"], shell=True)
 
 
 def get_current_mac(interface):
     ifconfig_result = sb.check_output(["ifconfig", interface]).decode()
-    mac_address_search_result = rx.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig_result)
+    mac_address_search_result = re.search(r"\w\w:\w\w:\w\w:\w\w:\w\w:\w\w", ifconfig_result)
     if mac_address_search_result:
         return str(mac_address_search_result.group(0))
     else:
@@ -39,12 +44,11 @@ def get_current_mac(interface):
 options = get_cmd_arguments()
 old_mac = get_current_mac(options.interface)
 # casting
-print('[+] Old MAC:' + old_mac)
 change_mac(options.interface, options.new_mac)
-new_mac = get_current_mac(options.interface)
-print('[+] New MAC:' + new_mac)
+new_mac = options.new_mac
 
-if old_mac == new_mac:
-    print('[+] MAC address successfully changed from', old_mac, 'to', new_mac)
+if not old_mac == new_mac:
+    print('[+] Old MAC address:', old_mac)
+    print('[+] New MAC address:', new_mac)
 else:
     print('[-] MAC Address did not get changed')
