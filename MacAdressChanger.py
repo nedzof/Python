@@ -21,15 +21,16 @@ def get_cmd_arguments():
     (option, arguments) = parser.parse_args()
     if not option.interface:
         parser.error("\n[-] Please specify an interface, use --help for more info.")
-    if not option.new_mac:
+    if not (re.match("[0-9a-f]{2}([-:]?)[0-9a-f]{2}(\\1[0-9a-f]{2}){4}$", str(option.new_mac))):
         option.new_mac = random_mac()
     return option
 
 
 def change_mac(interface, mac):
     print("[+] Changing MAC address for", interface, "to", mac)
-    sb.call(["ifconfig", interface, "down"], shell=True)
-    sb.call(["ifconfig " + interface + " hw ether " + mac], shell=True)
+    sb.call(["sudo", "ifconfig", interface, "down"], shell=True)
+    sb.call(["sudo", "ifconfig", interface, "hw", "ether", mac], shell=True)
+    sb.call(["sudo", "ifconfig", interface, "up"], shell=True)
 
 
 def get_current_mac(interface):
@@ -43,9 +44,8 @@ def get_current_mac(interface):
 
 options = get_cmd_arguments()
 old_mac = get_current_mac(options.interface)
-# casting
-change_mac(options.interface, options.new_mac)
 new_mac = options.new_mac
+change_mac(options.interface, new_mac)
 
 if not old_mac == new_mac:
     print('[+] Old MAC address:', old_mac)
