@@ -35,7 +35,6 @@ def get_file(zip_name, extension):
 
 
 start = time.time()
-print(start)
 option = get_cmd_arguments()
 zip_file = get_file(option.zname, 'zip')
 dic_file = get_file(option.dname, 'txt')
