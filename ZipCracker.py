@@ -22,7 +22,7 @@ def main():
     data_folder = Path(os.path.dirname(__file__))
     zipFile_to_open = data_folder / "{%s}.zip" % zname
     zip = zi.ZipFile(zipFile_to_open)
-    dictionary = open('/home/caruk/PycharmProjects/Python/{}.txt'.format(dname))
+    dictionary = open('/home/caruk/PycharmProjects/PythonScripts/{}.txt'.format(dname))
     for guess in dictionary.readlines():
         chance = guess.strip('\n')
         print("[*] Cracking Password for: " + chance)

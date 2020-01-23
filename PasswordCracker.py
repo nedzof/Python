@@ -5,7 +5,7 @@ import crypt
 
 def testPass(cryptPass):
     salt = cryptPass[0:2]
-    dictFile = open('/home/caruk/PycharmProjects/Python/dictionary.txt', 'r')
+    dictFile = open('//dictionary.txt', 'r')
     for num, word in enumerate(dictFile.readlines(), start=1):
         print(("[%d] Trying with: " % num) + word)
         word = word.strip('\n')
