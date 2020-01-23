@@ -45,7 +45,7 @@ count = 0
 for guess in dictionary.readlines():
     chance = guess.strip('\n')
     print("[*] Cracking Password for: " + chance)
-    t = Thread(target=extract_file, args=(chance, zip))
+    t = Thread(target=extract_file, args=(chance, zip_file))
     count = count + 1
     t.start()
 delta = time.gmtime(time.time() - start)
