@@ -4,6 +4,7 @@ import time
 from threading import Thread
 import optparse
 from pathlib import Path
+import datetime
 
 
 def extract_file(password, zip_file):
@@ -40,13 +41,13 @@ zip_file = get_file(option.zname, 'zip')
 dic_file = get_file(option.dname, 'txt')
 
 dictionary = open(dic_file)
+count = 0
 for guess in dictionary.readlines():
     chance = guess.strip('\n')
     print("[*] Cracking Password for: " + chance)
-    try:
-        t = Thread(target=extract_file, args=(chance, zip))
-        t.start()
-    except Exception as e:
-        continue
-# zip_file.close()
-print(time.strftime("%H:%M:%S", time.gmtime(time.time() - start)))
+    t = Thread(target=extract_file, args=(chance, zip))
+    count = count + 1
+    t.start()
+delta = time.gmtime(time.time() - start)
+print(time.strftime("%H:%M:%S", delta))
+print(int(count / (time.time() - start)), "Guesses per second")
