@@ -1,19 +1,17 @@
-import zipfile as zi
+import optparse
 import os
 import time
-from threading import Thread
-import optparse
 from pathlib import Path
-import datetime
+from threading import Thread
 
 
 def extract_file(password, zip_file):
     try:
         zip_file.extractall(pwd=password)
-        print("[+] Found password = " + password)
+        print("[+] Found password = \t" + password)
         return True
     except Exception as e:
-        print("[-] Found Bad: " + chance)
+        print("[-]")
         return False
 
 
@@ -23,7 +21,11 @@ def get_cmd_arguments():
     parser.add_option('-d', dest='dname', type='string', help='specify Dictionary File')
     (options, args) = parser.parse_args()
     if (options.zname is None):
-        parser.error("Please specifiy ZipFile to crack!")
+        answer = input("Default to evil.ip? (y/n)\t").lower()
+        if answer.startswith("y"):
+            options.zname = "evil"
+        else:
+            parser.error("Please specifiy ZipFile to crack!")
     if (options.dname is None):
         options.dname = "dictionary"
     return options
@@ -44,7 +46,7 @@ dictionary = open(dic_file)
 count = 0
 for guess in dictionary.readlines():
     chance = guess.strip('\n')
-    print("[*] Cracking Password for: " + chance)
+    print("[*] Cracking Password for: \t" + chance)
     t = Thread(target=extract_file, args=(chance, zip_file))
     count = count + 1
     t.start()
