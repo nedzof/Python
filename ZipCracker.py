@@ -1,14 +1,16 @@
 import optparse
 import os
+import sys
 import time
 from pathlib import Path
 from threading import Thread
 
 
-def extract_file(password, zip_file):
+def extract_file(password, z_file, s_time):
     try:
-        zip_file.extractall(pwd=password)
-        print("[+] Found password = \t" + password)
+        z_file.extractall(pwd=password)
+        t_t = time.time() - s_time
+        print("[+] Took %f seconds to crack the password. %i attempts per second." % (t_t, i / t_t))
         return True
     except Exception as e:
         print("[-]")
@@ -20,13 +22,13 @@ def get_cmd_arguments():
     parser.add_option('-f', dest='zname', type='string', help='Specify Zip File')
     parser.add_option('-d', dest='dname', type='string', help='specify Dictionary File')
     (options, args) = parser.parse_args()
-    if (options.zname is None):
-        answer = input("Default to evil.ip? (y/n)\t").lower()
+    if options.zname is None:
+        answer = input("Default to evil.zip? (Y/N):\t").lower()
         if answer.startswith("y"):
             options.zname = "evil"
         else:
             parser.error("Please specifiy ZipFile to crack!")
-    if (options.dname is None):
+    if options.dname is None:
         options.dname = "dictionary"
     return options
 
@@ -43,13 +45,14 @@ zip_file = get_file(option.zname, 'zip')
 dic_file = get_file(option.dname, 'txt')
 
 dictionary = open(dic_file)
-count = 0
+i = 0
 for guess in dictionary.readlines():
     chance = guess.strip('\n')
     print("[*] Cracking Password for: \t" + chance)
-    t = Thread(target=extract_file, args=(chance, zip_file))
-    count = count + 1
+    i += 1
+    t = Thread(target=extract_file, args=(chance, zip_file, start))
     t.start()
-delta = time.gmtime(time.time() - start)
-print(time.strftime("%H:%M:%S", delta))
-print(int(count / (time.time() - start)), "Guesses per second")
+# delta = time.gmtime(time.time() - start)
+# print(time.strftime("%H:%M:%S", delta))
+
+sys.exit(1)
