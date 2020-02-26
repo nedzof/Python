@@ -53,4 +53,3 @@ except Exception as e:
 # !mona bytearray -cpb "\x00\x0a"
 # !mona compare -f C:\logs\war-ftpd\bytearray.bin -a 00AFFD44
 # !mona bytearray -cpb "\x00\x0a\x0d\x40"
-
